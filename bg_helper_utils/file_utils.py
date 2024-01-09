@@ -170,3 +170,30 @@ def is_binary_file(file_path: str, block_size: int = 1024) -> bool:
         print(f"An error occurred: {e}")
         return None
 
+def get_file_list_from_directory(indir: str = None, extension: str = None) -> list:
+    """Get the list of files in the specified directory
+    :param indir: {str} - the directory to search for files
+    :param extension: {str} - the file extension to filter on
+    :returns file_list: {list} - the list of files found in the directory
+    """
+    if extension is None:
+        logging.info(f"Going to search for files in directory '{indir}'")
+    else:
+        logging.info(f"Going to search for files with extension '{extension}' in directory '{indir}'")
+
+    file_list = []
+    for dirpath, dirnames, filenames in os.walk(indir):
+        if 'venv' in dirpath:
+            logging.info(f"Going to ignore files in directory '{dirpath}'")
+            continue
+        for name in filenames:
+            file_path = os.path.normpath(os.path.join(dirpath, name))
+            if os.path.isfile(file_path):
+                if extension is not None:
+                    if file_path.endswith(f'.{extension}'):
+                        file_list.append(file_path)
+                else:
+                    file_list.append(file_path)
+
+    return file_list
+
