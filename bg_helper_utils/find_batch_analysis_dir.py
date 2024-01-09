@@ -55,8 +55,8 @@ def find_batch_analysis_dir(config_file: str, config: Dict[str, Any]) -> None:
         config_file (str): the configuration file path
         config (Dict[str, Any]): The configuration
     """
-    if "analysis_dir" not in config:
-        raise Exception(f"Could not find 'analysis_dir' in config file '{config_file}'")
+    if "analysis_base_dir" not in config:
+        raise Exception(f"Could not find 'analysis_base_dir' in config file '{config_file}'")
 
     analysis_base_dir= config["analysis_base_dir"]
     check_indir_status(analysis_base_dir)
@@ -79,7 +79,7 @@ def find_batch_analysis_dir(config_file: str, config: Dict[str, Any]) -> None:
 
     check_indir_status(analysis_dir)
 
-    print.console(f"[bold green]Found batch analysis directory[/] '{analysis_dir}'")
+    console.print(f"[bold green]Found batch analysis directory[/] '{analysis_dir}'")
 
 
 
