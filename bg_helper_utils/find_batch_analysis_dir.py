@@ -40,7 +40,7 @@ DEFAULT_LOGGING_FORMAT = "%(levelname)s : %(asctime)s : %(pathname)s : %(lineno)
 
 DEFAULT_LOGGING_LEVEL = logging.INFO
 
-DEFAULT_VERBOSE = True
+DEFAULT_VERBOSE = False
 
 
 error_console = Console(stderr=True, style="bold red")
