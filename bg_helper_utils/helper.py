@@ -13,7 +13,7 @@ def get_analyis_type() -> str:
     analysis_type = None
     while analysis_type is None or analysis_type == "":
         analysis_type = input("What is the analysis type? : ")
-    return analysis_type.strip().lower()
+    return analysis_type.strip()
 
 
 def get_batch_id() -> str:
@@ -31,5 +31,5 @@ def get_batch_id() -> str:
     batch_id = None
     while batch_id is None or batch_id == "":
         batch_id = input("What is the batch ID? : ")
-    return batch_id.strip().lower()
+    return batch_id.strip()
 
