@@ -74,11 +74,20 @@ def find_batch_analysis_dir(config_file: str, config: Dict[str, Any]) -> None:
 
     print_green(f"Found batch analysis directory '{analysis_dir}'")
 
+
+
+def validate_verbose(ctx, param, value):
+    if value is None:
+        click.secho("--verbose was not specified and therefore was set to 'True'", fg='yellow')
+        return DEFAULT_VERBOSE
+    return value
+
+
 @click.command()
 @click.option('--config_file', type=click.Path(exists=True), help=f"The configuration file for this project - default is '{DEFAULT_CONFIG_FILE}'")
 @click.option('--logfile', help="The log file")
-@click.option('--outdir', help="The default is the current working directory - default is '{DEFAULT_OUTDIR}'")
-@click.option('--verbose', is_flag=True, help=f"Will print more info to STDOUT - default is '{DEFAULT_VERBOSE}'")
+@click.option('--outdir', help=f"The default is the current working directory - default is '{DEFAULT_OUTDIR}'")
+@click.option('--verbose', is_flag=True, help=f"Will print more info to STDOUT - default is '{DEFAULT_VERBOSE}'.", callback=validate_verbose)
 def main(config_file: str, logfile: str, outdir: str, verbose: bool):
     """Find the samplesheet."""
     error_ctr = 0
@@ -114,14 +123,17 @@ def main(config_file: str, logfile: str, outdir: str, verbose: bool):
 
     check_infile_status(config_file, "yaml")
 
-    logging.info("Will load contents of config file 'config_file'")
+    if verbose:
+        logging.info(f"Will load contents of config file '{config_file}'")
+        console.log(f"Will load contents of config file '{config_file}'")
     config = yaml.safe_load(pathlib.Path(config_file).read_text())
 
 
     find_batch_analysis_dir(config_file, config)
 
-    console.print(f"The log file is '{logfile}'")
-    print_green(f"Execution of '{os.path.abspath(__file__)}' completed")
+    if verbose:
+        console.print(f"The log file is '{logfile}'")
+        print_green(f"Execution of '{os.path.abspath(__file__)}' completed")
 
 
 if __name__ == "__main__":

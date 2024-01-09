@@ -68,25 +68,40 @@ def find_samplesheet(config_file: str, config: Dict[str, Any]) -> None:
 
     analysis_file_type = config["analysis_file_type_mapping"][analysis_type]
 
-    samplesheet = os.path.join(base_samplesheet_dir, analysis_type, batch_id, f"{batch_id}_{analysis_file_type}_samplesheet.csv")
+    samplesheet = os.path.join(
+        base_samplesheet_dir,
+        batch_id,
+        f"{batch_id}_{analysis_file_type}_samplesheet.csv"
+    )
 
     if os.path.exists(samplesheet):
-        print_green(f"Found samplesheet '{samplesheet}'")
+
+        print_green(f"\nFound samplesheet '{samplesheet}'")
         md5sum = calculate_md5(samplesheet)
         filesize = get_file_size(samplesheet)
         date_created = get_file_creation_date(samplesheet)
-        console.print(f"md5sum: {md5sum}")
-        console.print(f"filesize: {filesize}")
-        console.print(f"date_created: {date_created}")
+
+        console.print(f"[yellow]md5sum[/]: {md5sum}")
+        console.print(f"[yellow]filesize[/]: {filesize}")
+        console.print(f"[yellow]date_created[/]: {date_created}")
     else:
         print_red(f"Could not find samplesheet '{samplesheet}'")
+
+
+
+def validate_verbose(ctx, param, value):
+    if value is None:
+        click.secho("--verbose was not specified and therefore was set to 'True'", fg='yellow')
+        return DEFAULT_VERBOSE
+    return value
+
 
 @click.command()
 @click.option('--config_file', type=click.Path(exists=True), help=f"The configuration file for this project - default is '{DEFAULT_CONFIG_FILE}'")
 @click.option('--logfile', help="The log file")
 @click.option('--outdir', help="The default is the current working directory - default is '{DEFAULT_OUTDIR}'")
 @click.option('--outfile', help="The output final report file")
-@click.option('--verbose', is_flag=True, help=f"Will print more info to STDOUT - default is '{DEFAULT_VERBOSE}'")
+@click.option('--verbose', is_flag=True, help=f"Will print more info to STDOUT - default is '{DEFAULT_VERBOSE}'.", callback=validate_verbose)
 def main(config_file: str, logfile: str, outdir: str, outfile: str, verbose: bool):
     """Find the samplesheet."""
     error_ctr = 0
@@ -122,13 +137,16 @@ def main(config_file: str, logfile: str, outdir: str, outfile: str, verbose: boo
         level=DEFAULT_LOGGING_LEVEL,
     )
 
-    logging.info("Will load contents of config file 'config_file'")
+    if verbose:
+        logging.info(f"Will load contents of config file '{config_file}'")
+        console.print(f"Will load contents of config file '{config_file}'")
     config = yaml.safe_load(pathlib.Path(config_file).read_text())
 
     find_samplesheet(config_file, config)
 
-    console.print(f"The log file is '{logfile}'")
-    print_green(f"Execution of '{os.path.abspath(__file__)}' completed")
+    if verbose:
+        console.print(f"The log file is '{logfile}'")
+        print_green(f"Execution of '{os.path.abspath(__file__)}' completed")
 
 
 if __name__ == "__main__":
