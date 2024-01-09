@@ -57,16 +57,22 @@ def find_samplesheet(config_file: str, config: Dict[str, Any]) -> None:
     if "base_samplesheet_dir" not in config:
         raise Exception(f"Could not find 'base_samplesheet_dir' in config file '{config_file}'")
 
-    if "analysis_file_type_mapping" not in config:
-        raise Exception(f"Could not find 'analysis_file_type_mapping' in config file '{config_file}'")
-
     base_samplesheet_dir = config["base_samplesheet_dir"]
     check_indir_status(base_samplesheet_dir)
 
     analysis_type = get_analyis_type()
     batch_id = get_batch_id()
 
-    analysis_file_type = config["analysis_file_type_mapping"][analysis_type]
+    if "samplesheet" in config:
+        raise Exception(f"Could not find 'samplesheet' in config file '{config_file}'")
+
+    if "analysis_file_type_mapping" not in config["samplesheet"]:
+        raise Exception(f"Could not find 'analysis_file_type_mapping' in 'samplesheet' section in config file '{config_file}'")
+
+    if analysis_type not in config["samplesheet"]["analysis_file_type_mapping"]:
+        raise Exception(f"Could not find '{analysis_type}' in 'analysis_file_type_mapping' in 'samplesheet' section in config file '{config_file}'")
+
+    analysis_file_type = config["samplesheet"]["analysis_file_type_mapping"][analysis_type]
 
     samplesheet = os.path.join(
         base_samplesheet_dir,
@@ -76,7 +82,7 @@ def find_samplesheet(config_file: str, config: Dict[str, Any]) -> None:
 
     if os.path.exists(samplesheet):
 
-        print_green(f"\nFound samplesheet '{samplesheet}'")
+        console.print(f"\n[bold green]Found samplesheet[/] '{samplesheet}'")
         md5sum = calculate_md5(samplesheet)
         filesize = get_file_size(samplesheet)
         date_created = get_file_creation_date(samplesheet)

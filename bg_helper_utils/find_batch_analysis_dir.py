@@ -16,6 +16,7 @@ from .console_helper import print_red, print_yellow, print_green
 from .file_utils import check_indir_status, check_infile_status
 from .helper import get_analyis_type, get_batch_id
 
+console = Console()
 
 DEFAULT_PROJECT = "bg-helper-utils"
 
@@ -57,22 +58,28 @@ def find_batch_analysis_dir(config_file: str, config: Dict[str, Any]) -> None:
     if "analysis_dir" not in config:
         raise Exception(f"Could not find 'analysis_dir' in config file '{config_file}'")
 
-    if "analysis_file_type_mapping" not in config:
-        raise Exception(f"Could not find 'analysis_file_type_mapping' in config file '{config_file}'")
-
     analysis_base_dir= config["analysis_base_dir"]
     check_indir_status(analysis_base_dir)
 
     analysis_type = get_analyis_type()
     batch_id = get_batch_id()
 
-    analysis_file_type = config["analysis_file_type_mapping"][analysis_type]
+    if "batch_analysis" not in config:
+        raise Exception(f"Could not find 'batch_analysis' in config file '{config_file}'")
+
+    if "analysis_file_type_mapping" not in config["batch_analysis"]:
+        raise Exception(f"Could not find 'analysis_file_type_mapping' in 'batch_analysis' section in config file '{config_file}'")
+
+    if analysis_type not in config["batch_analysis"]["analysis_file_type_mapping"]:
+        raise Exception(f"Could not find analysis type '{analysis_type}' in 'analysis_file_type_mapping' in 'batch_analysis' section in config file '{config_file}'")
+
+    analysis_file_type = config["batch_analysis"]["analysis_file_type_mapping"][analysis_type]
 
     analysis_dir = os.path.join(analysis_base_dir, analysis_file_type, batch_id)
 
     check_indir_status(analysis_dir)
 
-    print_green(f"Found batch analysis directory '{analysis_dir}'")
+    print.console(f"[bold green]Found batch analysis directory[/] '{analysis_dir}'")
 
 
 
