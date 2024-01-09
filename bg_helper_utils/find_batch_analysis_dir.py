@@ -94,10 +94,11 @@ def find_batch_analysis_dir(
 
     check_indir_status(analysis_dir)
 
-    console.print(f"[bold green]Found batch analysis directory[/] '{analysis_dir}'")
-
     if profile:
+        console.print(f"[bold green]Profiling batch analysis directory[/] '{analysis_dir}'")
         profile_dir_files(analysis_dir, outfile, logfile, config_file)
+    else:
+        console.print(f"[bold green]Found batch analysis directory[/] '{analysis_dir}'")
 
 
 def profile_dir_files(analysis_dir: str, outfile: str, logfile: str, config_file: str)  -> None:
