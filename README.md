@@ -21,14 +21,12 @@ Please see the [TODO](TODO.md) for a list of upcoming improvements.
 Please see the [INSTALL](INSTALL.md) guide for instructions.
 
 
-
 ## Exported scripts
 
-To use the exported script for ... :
+The following exported scripts are available:
+- find-samplesheet
+- find-batch-analysis-dir
 
-```bash
-
-```
 
 ## Contributing
 

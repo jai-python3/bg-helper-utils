@@ -10,7 +10,11 @@ with open('README.rst') as readme_file:
 with open('HISTORY.rst') as history_file:
     history = history_file.read()
 
-requirements = ['Click>=7.0', ]
+requirements = [
+    'Click>=7.0',
+    "Rich",
+    "PyYAML",
+]
 
 test_requirements = [ ]
 
@@ -30,7 +34,8 @@ setup(
     description="Collection of Python convenience scripts for BG tasks.",
     entry_points={
         'console_scripts': [
-            'bg_helper_utils=bg_helper_utils.cli:main',
+            'find-samplesheet=bg_helper_utils.find_samplesheet:main',
+            'find-batch-analysis-dir=bg_helper_utils.find_batch_analysis_dir:main',
         ],
     },
     install_requires=requirements,
@@ -39,6 +44,8 @@ setup(
     keywords='bg_helper_utils',
     name='bg_helper_utils',
     packages=find_packages(include=['bg_helper_utils', 'bg_helper_utils.*']),
+    package_data={"bg_helper_utils": ["conf/config.yaml"]},
+    scripts=["scripts/generate_executables_and_aliases.py"],
     test_suite='tests',
     tests_require=test_requirements,
     url='https://github.com/jai-python3/bg_helper_utils',
