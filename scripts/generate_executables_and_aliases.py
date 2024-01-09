@@ -49,7 +49,7 @@ def create_aliases_file(wrapper_scripts: List[str], outdir: str, prefix: str = D
         wrapper_scripts (List[str]): list of wrapper scripts
         outdir (str): output directory
     """
-    outfile = os.path.join(outdir, "aliases.txt")
+    outfile = os.path.join(outdir, f"{DEFAULT_PROJECT}-aliases.txt")
 
     with open(outfile, 'w') as of:
         of.write(f"## method-created: {os.path.abspath(__file__)}\n")
