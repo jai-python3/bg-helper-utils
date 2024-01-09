@@ -63,7 +63,7 @@ def find_samplesheet(config_file: str, config: Dict[str, Any]) -> None:
     analysis_type = get_analyis_type()
     batch_id = get_batch_id()
 
-    if "samplesheet" in config:
+    if "samplesheet" not in config:
         raise Exception(f"Could not find 'samplesheet' in config file '{config_file}'")
 
     if "analysis_file_type_mapping" not in config["samplesheet"]:
