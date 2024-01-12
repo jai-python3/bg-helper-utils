@@ -48,7 +48,7 @@ setup(
     scripts=["scripts/generate_executables_and_aliases.py"],
     test_suite='tests',
     tests_require=test_requirements,
-    url='https://github.com/jai-python3/bg_helper_utils',
+    url='https://github.com/jai-python3/bg-helper-utils',
     version='0.2.0',
     zip_safe=False,
 )
