@@ -9,6 +9,7 @@ import pathlib
 import yaml
 
 from rich.console import Console
+from rich.progress import Progress
 from datetime import datetime
 from typing import Any, Dict
 
@@ -108,21 +109,28 @@ def profile_dir_files(analysis_dir: str, outfile: str, logfile: str, config_file
         sys.exit(0)
 
     lookup = {}
-    for f in file_list:
-        md5sum = calculate_md5(f)
-        filesize = get_file_size(f)
-        date_created = get_file_creation_date(f)
-        lookup[f] = {
-            "md5sum": md5sum,
-            "filesize": filesize,
-            "date_created": date_created,
-        }
+
+    count = len(file_list)
+
+    with Progress() as progress:
+        task = progress.add_task(f"[cyan]Profiling {count} files", total=count)
+
+        for f in file_list:
+            md5sum = calculate_md5(f)
+            filesize = get_file_size(f)
+            date_created = get_file_creation_date(f)
+            lookup[f] = {
+                "md5sum": md5sum,
+                "filesize": filesize,
+                "date_created": date_created,
+            }
+            progress.update(task, advance=1)
 
 
-    generate_report(lookup, analysis_dir, outfile, logfile, config_file)
+    generate_report(lookup, analysis_dir, outfile, logfile, config_file, count)
 
 
-def generate_report(lookup: Dict[str, Dict[str, str]], analysis_dir: str, outfile: str, logfile: str, config_file: str) -> None:
+def generate_report(lookup: Dict[str, Dict[str, str]], analysis_dir: str, outfile: str, logfile: str, config_file: str, count: int) -> None:
 
     with open(outfile, 'w') as of:
         of.write(f"## method-created: {os.path.abspath(__file__)}\n")
@@ -132,12 +140,18 @@ def generate_report(lookup: Dict[str, Dict[str, str]], analysis_dir: str, outfil
         of.write(f"## config-file: {config_file}\n")
         of.write(f"## logfile: {logfile}\n")
 
-        for f in lookup:
-            md5sum = lookup[f]["md5sum"]
-            filesize = lookup[f]["filesize"]
-            date_created = lookup[f]["date_created"]
-            line = f"{f}\nmd5sum: {md5sum}\nbytesize: {filesize}\ndate created: {date_created}"
-            of.write(f"{line}\n\n")
+        with Progress() as progress:
+            task = progress.add_task(f"[cyan]Generating report for {count} files", total=count)
+
+            for f in lookup:
+                md5sum = lookup[f]["md5sum"]
+                filesize = lookup[f]["filesize"]
+                date_created = lookup[f]["date_created"]
+                line = f"{f}\nmd5sum: {md5sum}\nbytesize: {filesize}\ndate created: {date_created}"
+
+                of.write(f"{line}\n\n")
+
+                progress.update(task, advance=1)
 
     logging.info(f"Wrote report file '{outfile}'")
     print(f"Wrote report file '{outfile}'")
