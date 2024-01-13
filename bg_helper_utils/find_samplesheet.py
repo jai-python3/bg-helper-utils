@@ -13,7 +13,7 @@ from datetime import datetime
 from typing import Any, Dict
 
 from .console_helper import print_red, print_yellow, print_green
-from .file_utils import check_indir_status, check_infile_status, calculate_md5, get_file_size, get_file_creation_date
+from .file_utils import check_indir_status, check_infile_status, calculate_md5, get_file_size, get_file_creation_date, get_line_count
 from .helper import get_analyis_type, get_batch_id
 
 DEFAULT_PROJECT = "bg-helper-utils"
@@ -86,10 +86,12 @@ def find_samplesheet(config_file: str, config: Dict[str, Any]) -> None:
         md5sum = calculate_md5(samplesheet)
         filesize = get_file_size(samplesheet)
         date_created = get_file_creation_date(samplesheet)
+        line_count = get_line_count(samplesheet)
 
         console.print(f"[yellow]md5sum[/]: {md5sum}")
         console.print(f"[yellow]filesize[/]: {filesize}")
         console.print(f"[yellow]date_created[/]: {date_created}")
+        console.print(f"[yellow]line_count[/]: {line_count}")
     else:
         print_red(f"Could not find samplesheet '{samplesheet}'")
 
