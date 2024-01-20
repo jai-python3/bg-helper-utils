@@ -36,6 +36,7 @@ setup(
         'console_scripts': [
             'find-samplesheet=bg_helper_utils.find_samplesheet:main',
             'find-batch-analysis-dir=bg_helper_utils.find_batch_analysis_dir:main',
+            'make-bg-helper-utils=bg_helper_utils.make_shell_scripts_and_aliases:main',
         ],
     },
     install_requires=requirements,
@@ -45,7 +46,6 @@ setup(
     name='bg_helper_utils',
     packages=find_packages(include=['bg_helper_utils', 'bg_helper_utils.*']),
     package_data={"bg_helper_utils": ["conf/config.yaml"]},
-    scripts=["scripts/generate_executables_and_aliases.py"],
     test_suite='tests',
     tests_require=test_requirements,
     url='https://github.com/jai-python3/bg-helper-utils',
