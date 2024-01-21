@@ -23,7 +23,7 @@ Please see the [INSTALL](INSTALL.md) guide for instructions.
 
 ## Generate shell wrapper scripts
 
-After executing `pip install bg-helper-utils`, execute this exported script: `make_executables_and_aliases.py`.<br>
+After executing `pip install bg-helper-utils`, execute this exported script: `make-bg-helper-utils`.<br>
 This will create the wrapper shell scripts and a file containing aliases named `bg-helper-utils-aliases.txt` in the current directory.<br><br>
 You can then add this line to your `.bashrc` or `.zshrc`:<br>
 `source dir/bg-helper-utils-aliases.txt`<br>
